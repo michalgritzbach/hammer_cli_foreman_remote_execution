@@ -34,6 +34,10 @@ module HammerCLIForemanRemoteExecution
         JobInvocation.extend_data(invocation)
       end
 
+      def request_params
+        super.merge(:include_hosts => false)
+      end
+
       build_options
     end
 
@@ -83,11 +87,12 @@ module HammerCLIForemanRemoteExecution
 
       build_options do |o|
         o.expand(:none)
-        o.without(:host_status)
+        o.without(:host_status, :include_hosts)
       end
 
       def request_params
         params = super
+        params[:include_hosts] = option_show_host_status? || false
         params[:host_status] = true if option_show_host_status?
         params
       end
@@ -203,7 +208,7 @@ module HammerCLIForemanRemoteExecution
       end
 
       build_options do |o|
-        o.without(:targeting_type)
+        o.without(:targeting_type, :include_hosts)
       end
     end
 
